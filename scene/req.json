@@ -1,1 +1,1 @@
-{"fonts": [{"name": "adventor-bold", "url": "https://ctan.math.utah.edu/ctan/tex-archive/fonts/tex-gyre/opentype/texgyreadventor-bold.otf"}]}
+{"fonts": [{"name": "adventor-bold", "url": "https://mirrors.ctan.org/fonts/tex-gyre/opentype/texgyreadventor-bold.otf"}, {"name": "adventor-bold2", "url": "https://ftp.gwdg.de/pub/ctan/fonts/tex-gyre/opentype/texgyreadventor-bold.otf"}, {"name": "adventor-bold3", "url": "https://mirror.ox.ac.uk/sites/ctan.org/fonts/tex-gyre/opentype/texgyreadventor-bold.otf"}]}
