@@ -1,2 +1,6 @@
-sheet scenes: 25
-sheet objects: 16
+got bar18 (2400, 1600)
+got bar5 (2400, 1600)
+got bar16 (1600, 2400)
+got bar15 (1709, 2400)
+got bar0 (2400, 1800)
+got walnut (2400, 1540)
