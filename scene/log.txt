@@ -1,3 +1,1 @@
-font {'name': 'adventor-bold', 'url': 'https://mirrors.ctan.org/fonts/tex-gyre/opentype/texgyreadventor-bold.otf'}: Not a TrueType or OpenType font (bad sfntVersion)
-font adventor-regular 170364
-font {'name': 'GUST-FONT-LICENSE', 'url': 'https://mirrors.ctan.org/fonts/tex-gyre/doc/GUST-FONT-LICENSE.txt'}: Not a TrueType or OpenType font (bad sfntVersion)
+font {'name': 'adventor-bold', 'url': 'https://ctan.math.utah.edu/ctan/tex-archive/fonts/tex-gyre/opentype/texgyreadventor-bold.otf'}: HTTPSConnectionPool(host='ctan.math.utah.edu', port=443): Max retries exceeded with url: /ctan/tex-archive/fonts/tex-gyre/opentype/texgyreadventor-bold.otf (Caused by SSLError(SSLCertVerificationError(1, '[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1016)')))
