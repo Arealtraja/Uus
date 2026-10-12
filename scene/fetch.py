@@ -87,5 +87,20 @@ for g in req.get('get', []):
     except Exception as e:
         log.append(f"get {g}: {e}")
 
+
+os.makedirs('scene/fonts', exist_ok=True)
+for f in req.get('fonts', []):
+    try:
+        b = requests.get(f['url'], headers=H, timeout=60).content
+        p = f"scene/fonts/{f['name']}.otf"
+        open(p, 'wb').write(b)
+        from fontTools.ttLib import TTFont
+        t = TTFont(p)
+        t.flavor = 'woff2'
+        t.save(f"scene/fonts/{f['name']}.woff2")
+        log.append(f"font {f['name']} {len(b)}")
+    except Exception as e:
+        log.append(f"font {f}: {e}")
+
 open('scene/log.txt', 'w').write('\n'.join(log))
 print('\n'.join(log))
