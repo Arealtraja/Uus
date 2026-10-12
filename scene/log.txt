@@ -1,6 +1,3 @@
-got bar18 (2400, 1600)
-got bar5 (2400, 1600)
-got bar16 (1600, 2400)
-got bar15 (1709, 2400)
-got bar0 (2400, 1800)
-got walnut (2400, 1540)
+font {'name': 'adventor-bold', 'url': 'https://mirrors.ctan.org/fonts/tex-gyre/opentype/texgyreadventor-bold.otf'}: Not a TrueType or OpenType font (bad sfntVersion)
+font adventor-regular 170364
+font {'name': 'GUST-FONT-LICENSE', 'url': 'https://mirrors.ctan.org/fonts/tex-gyre/doc/GUST-FONT-LICENSE.txt'}: Not a TrueType or OpenType font (bad sfntVersion)
