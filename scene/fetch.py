@@ -12,6 +12,29 @@ def slug(s):
     return re.sub(r'[^a-z0-9]+', '-', s.lower()).strip('-')
 
 
+for sh in req.get('sheets', []):
+    thumbs = []
+    for u in sh['urls']:
+        try:
+            t = Image.open(io.BytesIO(requests.get('https://images.unsplash.com/' + u + '?w=420&q=70', headers=H, timeout=30).content)).convert('RGB')
+            t.thumbnail((400, 400))
+        except Exception as e:
+            t = Image.new('RGB', (400, 260), 'gray')
+            log.append(f'thumb {u}: {e}')
+        thumbs.append(t)
+    cols = 5
+    rows = (len(thumbs) + cols - 1) // cols or 1
+    sheet = Image.new('RGB', (cols * 410, rows * 410), 'white')
+    d = ImageDraw.Draw(sheet)
+    for i, t in enumerate(thumbs):
+        x, y = (i % cols) * 410, (i // cols) * 410
+        sheet.paste(t, (x + 5, y + 5))
+        d.rectangle([x + 5, y + 5, x + 44, y + 32], fill='black')
+        d.text((x + 12, y + 12), str(i), fill='yellow')
+    sheet.save(f"scene/sheets/{sh['name']}.jpg", quality=82)
+    json.dump(sh['urls'], open(f"scene/sheets/{sh['name']}.json", 'w'), indent=1)
+    log.append(f"sheet {sh['name']}: {len(thumbs)}")
+
 for q in req.get('search', []):
     r = None
     try:
@@ -46,7 +69,7 @@ for q in req.get('search', []):
 sess = None
 for g in req.get('get', []):
     try:
-        im = Image.open(io.BytesIO(requests.get(g['url'], headers=H, timeout=90).content)).convert('RGB')
+        im = Image.open(io.BytesIO(requests.get(g['url'] if g['url'].startswith('http') else 'https://images.unsplash.com/' + g['url'] + '?w=2400&q=85&fm=jpg', headers=H, timeout=90).content)).convert('RGB')
         if max(im.size) > g.get('w', 2400):
             im.thumbnail((g.get('w', 2400), g.get('w', 2400)))
         im.save(f"scene/img/{g['name']}.jpg", quality=86)
