@@ -13,18 +13,18 @@ def slug(s):
 
 
 for q in req.get('search', []):
+    r = None
     try:
-        r = requests.get('https://unsplash.com/napi/search/photos', params={'query': q, 'per_page': 30}, headers=H, timeout=30)
+        r = requests.get('https://api.openverse.org/v1/images/', params={'q': q, 'license': 'cc0,pdm,by', 'page_size': 30, 'mature': 'false'}, headers=H, timeout=40)
         res = r.json().get('results', [])
     except Exception as e:
-        log.append(f'search {q}: {e}')
+        log.append(f'search {q}: {e} {r.status_code if r is not None else ""} {r.text[:200] if r is not None else ""}')
         continue
-    res = [x for x in res if not x.get('premium') and not x.get('plus')]
     meta, thumbs = [], []
     for i, x in enumerate(res):
-        meta.append({'i': i, 'id': x['id'], 'w': x['width'], 'h': x['height'], 'alt': x.get('alt_description'), 'by': x['user']['name']})
+        meta.append({'i': i, 'url': x.get('url'), 'w': x.get('width'), 'h': x.get('height'), 'title': x.get('title'), 'by': x.get('creator'), 'lic': x.get('license'), 'src': x.get('source'), 'page': x.get('foreign_landing_url')})
         try:
-            t = Image.open(io.BytesIO(requests.get(x['urls']['thumb'], timeout=30).content)).convert('RGB')
+            t = Image.open(io.BytesIO(requests.get(x.get('thumbnail') or x['url'], headers=H, timeout=30).content)).convert('RGB')
             t.thumbnail((240, 240))
             thumbs.append(t)
         except Exception:
@@ -46,14 +46,11 @@ for q in req.get('search', []):
 sess = None
 for g in req.get('get', []):
     try:
-        info = requests.get(f"https://unsplash.com/napi/photos/{g['id']}", headers=H, timeout=30).json()
-        if info.get('premium') or info.get('plus'):
-            log.append(f"skip premium {g['id']}")
-            continue
-        url = info['urls']['raw'] + f"&w={g.get('w', 2000)}&q=82&fm=jpg"
-        im = Image.open(io.BytesIO(requests.get(url, timeout=60).content)).convert('RGB')
+        im = Image.open(io.BytesIO(requests.get(g['url'], headers=H, timeout=90).content)).convert('RGB')
+        if max(im.size) > g.get('w', 2400):
+            im.thumbnail((g.get('w', 2400), g.get('w', 2400)))
         im.save(f"scene/img/{g['name']}.jpg", quality=86)
-        json.dump({'id': g['id'], 'by': info['user']['name'], 'link': info['links']['html']}, open(f"scene/img/{g['name']}.json", 'w'))
+        json.dump(g, open(f"scene/img/{g['name']}.json", 'w'))
         if g.get('cut'):
             from rembg import remove, new_session
             if sess is None:
@@ -63,7 +60,7 @@ for g in req.get('get', []):
             if bb:
                 out = out.crop(bb)
             out.save(f"scene/img/{g['name']}.png")
-        log.append(f"got {g['name']}")
+        log.append(f"got {g['name']} {im.size}")
     except Exception as e:
         log.append(f"get {g}: {e}")
 
